@@ -93,6 +93,16 @@ client.connect(err => {
             })
     })
 
+    app.patch('/updateStatus/:id', (req, res) => {
+        const id = ObjectID(req.params.id)
+        orderCollection.updateOne({ _id: id }, {
+            $set: { status: req.body.status, color: req.body.color }
+        })
+            .then(result => {
+                console.log(result);
+            })
+    })
+
 });
 
 app.listen(process.env.PORT || port)
