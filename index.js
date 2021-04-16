@@ -23,6 +23,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
     const reviewsCollection = client.db("refreshdb").collection("reviews");
+    const orderCollection = client.db("refreshdb").collection("orders");
 
     app.post('/addService', (req, res) => {
         const service = req.body;
@@ -34,6 +35,14 @@ client.connect(err => {
 
     app.get('/services', (req, res) => {
         servicesCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
+    app.get('/singleService/:id', (req, res) => {
+        const id = ObjectID(req.params.id)
+        servicesCollection.find({ _id: id })
             .toArray((err, documents) => {
                 res.send(documents)
             })
@@ -61,7 +70,20 @@ client.connect(err => {
             })
     })
 
+    app.post('/addOrder', (req, res) => {
+        const order = req.body;
+        orderCollection.insertOne(order)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
 
+    app.get('/orders', (req, res) => {
+        orderCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
 
 });
 
