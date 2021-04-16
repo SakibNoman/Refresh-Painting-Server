@@ -24,6 +24,7 @@ client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
     const reviewsCollection = client.db("refreshdb").collection("reviews");
     const orderCollection = client.db("refreshdb").collection("orders");
+    const adminCollection = client.db("refreshdb").collection("admins");
 
     app.post('/addService', (req, res) => {
         const service = req.body;
@@ -100,6 +101,22 @@ client.connect(err => {
         })
             .then(result => {
                 console.log(result);
+            })
+    })
+
+    app.post('/addAdmin', (req, res) => {
+        const email = req.body;
+        adminCollection.insertOne(email)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+
+    app.post('/isAdmin', (req, res) => {
+        const email = req.body.email
+        adminCollection.find({ email: email })
+            .toArray((err, admin) => {
+                res.send(admin.length > 0)
             })
     })
 
