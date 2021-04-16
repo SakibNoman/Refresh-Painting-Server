@@ -85,6 +85,14 @@ client.connect(err => {
             })
     })
 
+    app.get('/userOrder/:email', (req, res) => {
+        const email = req.params.email
+        orderCollection.find({ email: email })
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
 });
 
 app.listen(process.env.PORT || port)
