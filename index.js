@@ -22,6 +22,7 @@ app.get('/', (req, res) => {
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
+    const reviewsCollection = client.db("refreshdb").collection("reviews");
 
     app.post('/addService', (req, res) => {
         const service = req.body;
@@ -44,6 +45,23 @@ client.connect(err => {
             .then(res => res.json())
             .then(data => console.log("successfully deleted"))
     })
+
+    app.post('/addReview', (req, res) => {
+        const review = req.body;
+        reviewsCollection.insertOne(review)
+            .then(result => {
+                res.send(result.insertedCount > 0)
+            })
+    })
+
+    app.get('/reviews', (req, res) => {
+        reviewsCollection.find({})
+            .toArray((err, documents) => {
+                res.send(documents)
+            })
+    })
+
+
 
 });
 
