@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config()
-const ObjectID = require('mongodb').ObjectID;
+
 
 //internal imports
 const client = require('./Connection/DBConnection');
@@ -14,6 +14,8 @@ const addServiceRouter = require('./routers/addServiceRouter')
 const singleServiceRouter = require('./routers/singleServiceRouter')
 const deleteServiceRouter = require('./routers/deleteServiceRouter')
 const addReviewRouter = require('./routers/addReviewRouter')
+const userOrderRouter = require('./routers/userOrderRouter')
+const updateStatusRouter = require('./routers/updateStatusRouter')
 
 
 const app = express()
@@ -35,30 +37,13 @@ app.use('/addService', addServiceRouter) //api for add new services by admin
 app.use('/singleService/:id', singleServiceRouter) //api for single service when clicked on service card
 app.use('/deleteService/:id', deleteServiceRouter)  //api for deleting service by admin
 app.use('/addReview', addReviewRouter) //api to post review by user
+app.use('/userOrder/:email', userOrderRouter) //api to find order for specific user
+app.use('/updateStatus/:id', updateStatusRouter) //api to update order status
+
 
 client.connect(err => {
     const orderCollection = client.db("refreshdb").collection("orders");
     const adminCollection = client.db("refreshdb").collection("admins");
-
-    //api to find order for specific user
-    app.get('/userOrder/:email', (req, res) => {
-        const email = req.params.email
-        orderCollection.find({ email: email })
-            .toArray((err, documents) => {
-                res.send(documents)
-            })
-    })
-
-    //api to update order status
-    app.patch('/updateStatus/:id', (req, res) => {
-        const id = ObjectID(req.params.id)
-        orderCollection.updateOne({ _id: id }, {
-            $set: { status: req.body.status, color: req.body.color }
-        })
-            .then(result => {
-                console.log(result);
-            })
-    })
 
     //api to add new admin
     app.post('/addAdmin', (req, res) => {
