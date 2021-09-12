@@ -7,7 +7,7 @@ const router = express.Router();
 client.connect(err => {
     const orderCollection = client.db("refreshdb").collection("orders");
 
-    router.get("/", (req, res) => {
+    router.post("/", (req, res) => {
         const order = req.body;
         orderCollection.insertOne(order)
             .then(result => {
