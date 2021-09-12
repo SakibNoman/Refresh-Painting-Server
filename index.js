@@ -10,10 +10,13 @@ const servicesRouter = require('./routers/servicesRouter')
 const reviewsRouter = require('./routers/reviewsRouter')
 const ordersRouter = require('./routers/ordersRouter')
 const addOrderRouter = require('./routers/addOrderRouter')
+const addServiceRouter = require('./routers/addServiceRouter')
+const singleServiceRouter = require('./routers/singleServiceRouter')
 
 
 const app = express()
 
+//middleWires
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -28,32 +31,15 @@ app.use('/services', servicesRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/orders', ordersRouter)
 app.use('/addOrder', addOrderRouter)
+app.use('/addService', addServiceRouter) //api for add new services by admin
+app.use('/singleService/:id', singleServiceRouter) //api for single service when clicked on service card
+
 
 client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
     const reviewsCollection = client.db("refreshdb").collection("reviews");
     const orderCollection = client.db("refreshdb").collection("orders");
     const adminCollection = client.db("refreshdb").collection("admins");
-
-
-    //api for add new services by admin
-    app.post('/addService', (req, res) => {
-        const service = req.body;
-        servicesCollection.insertOne(service)
-            .then(result => {
-                res.send(result.insertedCount > 0)
-            })
-    })
-
-
-    //api for single service when clicked on service card
-    app.get('/singleService/:id', (req, res) => {
-        const id = ObjectID(req.params.id)
-        servicesCollection.find({ _id: id })
-            .toArray((err, documents) => {
-                res.send(documents)
-            })
-    })
 
     //api for deleting service by admin
     app.delete('/deleteService/:id', (req, res) => {
