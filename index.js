@@ -9,6 +9,7 @@ const client = require('./Connection/DBConnection');
 const servicesRouter = require('./routers/servicesRouter')
 const reviewsRouter = require('./routers/reviewsRouter')
 const ordersRouter = require('./routers/ordersRouter')
+const addOrderRouter = require('./routers/addOrderRouter')
 
 
 const app = express()
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 app.use('/services', servicesRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/orders', ordersRouter)
+app.use('/addOrder', addOrderRouter)
 
 client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
@@ -65,15 +67,6 @@ client.connect(err => {
     app.post('/addReview', (req, res) => {
         const review = req.body;
         reviewsCollection.insertOne(review)
-            .then(result => {
-                res.send(result.insertedCount > 0)
-            })
-    })
-
-    //api to add new order
-    app.post('/addOrder', (req, res) => {
-        const order = req.body;
-        orderCollection.insertOne(order)
             .then(result => {
                 res.send(result.insertedCount > 0)
             })
