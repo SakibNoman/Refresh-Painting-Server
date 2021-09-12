@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const MongoClient = require('mongodb').MongoClient;
 require('dotenv').config()
 const ObjectID = require('mongodb').ObjectID;
 
-//database connection url
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.cqpfg.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+//internal imports
+const client = require('./Connection/DBConnection');
+const servicesRouter = require('./routers/servicesRouter')
+const reviewsRouter = require('./routers/reviewsRouter')
+const ordersRouter = require('./routers/ordersRouter')
 
 
 const app = express()
@@ -20,12 +22,17 @@ app.get('/', (req, res) => {
     res.send("hello from db it's working working")
 })
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+//routes
+app.use('/services', servicesRouter)
+app.use('/reviews', reviewsRouter)
+app.use('/orders', ordersRouter)
+
 client.connect(err => {
     const servicesCollection = client.db("refreshdb").collection("services");
     const reviewsCollection = client.db("refreshdb").collection("reviews");
     const orderCollection = client.db("refreshdb").collection("orders");
     const adminCollection = client.db("refreshdb").collection("admins");
+
 
     //api for add new services by admin
     app.post('/addService', (req, res) => {
@@ -36,13 +43,6 @@ client.connect(err => {
             })
     })
 
-    //api for getting all services to show in homepage
-    app.get('/services', (req, res) => {
-        servicesCollection.find({})
-            .toArray((err, documents) => {
-                res.send(documents)
-            })
-    })
 
     //api for single service when clicked on service card
     app.get('/singleService/:id', (req, res) => {
@@ -70,28 +70,12 @@ client.connect(err => {
             })
     })
 
-    //api to find all reviews to show in home page
-    app.get('/reviews', (req, res) => {
-        reviewsCollection.find({})
-            .toArray((err, documents) => {
-                res.send(documents)
-            })
-    })
-
     //api to add new order
     app.post('/addOrder', (req, res) => {
         const order = req.body;
         orderCollection.insertOne(order)
             .then(result => {
                 res.send(result.insertedCount > 0)
-            })
-    })
-
-    //api to find all orders
-    app.get('/orders', (req, res) => {
-        orderCollection.find({})
-            .toArray((err, documents) => {
-                res.send(documents)
             })
     })
 
@@ -136,3 +120,4 @@ client.connect(err => {
 });
 
 app.listen(process.env.PORT || port)
+
