@@ -1,32 +1,22 @@
 const express = require('express');
-const { client, dbClientConnect } = require('../Connection/DBConnection');
-const ObjectID = require('mongodb').ObjectID;
+const Admin = require('../models/admin');
 
 const router = express.Router();
 
 
-// client.connect(err => {
-//     const adminCollection = client.db("refreshdb").collection("admins");
+router.post("/", (req, res) => {
+    const admin = new Admin(req.body)
+    admin
+        .save()
+        .then((info) => {
+            return res.json(Boolean(info._id))
+        }).catch(err => {
+            return res.status(500).json({
+                error: "NOT able to save user in DB" + err
+            })
+        })
 
-//     router.post("/", (req, res) => {
-//         const email = req.body;
-//         adminCollection.insertOne(email)
-//             .then(result => {
-//                 res.send(result.insertedCount > 0)
-//             })
-//     })
-// })
-// dbClientConnect(err => {
-//     const adminCollection = client.db("refreshdb").collection("admins");
-
-//     router.post("/", (req, res) => {
-//         const email = req.body;
-//         adminCollection.insertOne(email)
-//             .then(result => {
-//                 res.send(result.insertedCount > 0)
-//             })
-//     })
-// })
+})
 
 
 

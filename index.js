@@ -12,7 +12,6 @@ const addOrderRouter = require('./routers/addOrderRouter')
 const addServiceRouter = require('./routers/addServiceRouter')
 const deleteServiceRouter = require('./routers/deleteServiceRouter')
 const addReviewRouter = require('./routers/addReviewRouter')
-const userOrderRouter = require('./routers/userOrderRouter')
 const updateStatusRouter = require('./routers/updateStatusRouter')
 const adminCheckRouter = require('./routers/adminCheckRouter')
 const addAdminRouter = require('./routers/addAdminRouter')
@@ -39,13 +38,13 @@ app.use('/addService', addServiceRouter) //api for add new services by admin
 app.use('/singleService', servicesRouter) //api for single service when clicked on service card
 app.use('/deleteService/:id', deleteServiceRouter)  //api for deleting service by admin
 app.use('/addReview', addReviewRouter) //api to post review by user
-app.use('/userOrder/:email', userOrderRouter) //api to find order for specific user
+app.use('/userOrder', ordersRouter) //api to find order for specific user
 app.use('/updateStatus/:id', updateStatusRouter) //api to update order status
 app.use('/isAdmin', adminCheckRouter)//api to check if logged user is an admin
 app.use('/addAdmin', addAdminRouter)//api to add new admin
 
 
-app.listen(process.env.PORT, () => {
+app.listen(5050 || process.env.PORT, () => {
     console.log(process.env.PORT);
 })
 

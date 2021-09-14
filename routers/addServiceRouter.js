@@ -1,20 +1,21 @@
 const express = require('express');
-const { client } = require('../Connection/DBConnection');
-
+const Service = require('../models/service');
 const router = express.Router();
 
 
-// client.connect(err => {
-//     const servicesCollection = client.db("refreshdb").collection("services");
+router.post("/", (req, res) => {
+    const service = new Service(req.body);
 
-//     router.post("/", (req, res) => {
-//         const service = req.body;
-//         servicesCollection.insertOne(service)
-//             .then(result => {
-//                 res.send(result.insertedCount > 0)
-//             })
-//     })
-// })
+    service
+        .save()
+        .then((info) => {
+            return res.json(Boolean(info._id))
+        }).catch(err => {
+            return res.status(500).json({
+                error: "NOT able to save service in DB" + err
+            })
+        })
+})
 
 
 

@@ -1,21 +1,18 @@
 const express = require('express');
-const { client } = require('../Connection/DBConnection');
 const ObjectID = require('mongodb').ObjectID;
+const service = require('../models/service');
 
 const router = express.Router();
 
 
-// client.connect(err => {
-//     const servicesCollection = client.db("refreshdb").collection("services");
-
-//     router.delete("/", (req, res) => {
-//         const id = ObjectID(req.params.id)
-//         servicesCollection.findOneAndDelete({ _id: id })
-//             .then(res => res.json())
-//             .then(data => console.log("successfully deleted"))
-//     })
-// })
-
+router.delete("/", (req, res) => {
+    const id = ObjectID(req.params.id)
+    service
+        .deleteOne({ _id: id })
+        .then((info) => {
+            return res.json(info)
+        })
+})
 
 
 module.exports = router;

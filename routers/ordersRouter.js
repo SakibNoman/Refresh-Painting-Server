@@ -1,20 +1,21 @@
 const express = require('express');
-const { client } = require('../Connection/DBConnection');
+const order = require('../models/order');
 
 const router = express.Router();
 
 
-// client.connect(err => {
-//     const orderCollection = client.db("refreshdb").collection("orders");
+router.get("/", (req, res) => {
+    order
+        .find({})
+        .then(orders => res.json(orders))
+})
 
-//     router.get("/", (req, res) => {
-//         orderCollection.find({})
-//             .toArray((err, documents) => {
-//                 res.send(documents)
-//             })
-//     })
-// })
-
-
+router.get("/:email", (req, res) => {
+    const email = req.params.email
+    order.find({ email: email })
+        .then((documents) => {
+            res.send(documents)
+        })
+})
 
 module.exports = router;

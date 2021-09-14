@@ -1,20 +1,21 @@
 const express = require('express');
-const { client } = require('../Connection/DBConnection');
 
 const router = express.Router();
+const Review = require('../models/review');
 
+router.post("/", (req, res) => {
+    const review = new Review(req.body)
 
-// client.connect(err => {
-//     const reviewsCollection = client.db("refreshdb").collection("reviews");
-
-//     router.post("/", (req, res) => {
-//         const review = req.body;
-//         reviewsCollection.insertOne(review)
-//             .then(result => {
-//                 res.send(result.insertedCount > 0)
-//             })
-//     })
-// })
+    review
+        .save()
+        .then((info) => {
+            return res.json(Boolean(info._id))
+        }).catch(err => {
+            return res.status(500).json({
+                error: "NOT able to save user in DB" + err
+            })
+        })
+})
 
 
 
