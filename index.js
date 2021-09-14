@@ -10,7 +10,6 @@ const reviewsRouter = require('./routers/reviewsRouter')
 const ordersRouter = require('./routers/ordersRouter')
 const addOrderRouter = require('./routers/addOrderRouter')
 const addServiceRouter = require('./routers/addServiceRouter')
-const singleServiceRouter = require('./routers/singleServiceRouter')
 const deleteServiceRouter = require('./routers/deleteServiceRouter')
 const addReviewRouter = require('./routers/addReviewRouter')
 const userOrderRouter = require('./routers/userOrderRouter')
@@ -37,7 +36,7 @@ app.use('/reviews', reviewsRouter)
 app.use('/orders', ordersRouter)
 app.use('/addOrder', addOrderRouter)
 app.use('/addService', addServiceRouter) //api for add new services by admin
-app.use('/singleService/:id', singleServiceRouter) //api for single service when clicked on service card
+app.use('/singleService', servicesRouter) //api for single service when clicked on service card
 app.use('/deleteService/:id', deleteServiceRouter)  //api for deleting service by admin
 app.use('/addReview', addReviewRouter) //api to post review by user
 app.use('/userOrder/:email', userOrderRouter) //api to find order for specific user
