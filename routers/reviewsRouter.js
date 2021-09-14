@@ -1,20 +1,13 @@
 const express = require('express');
-const { client } = require('../Connection/DBConnection');
+const review = require('../models/review');
 
 const router = express.Router();
 
-
-// client.connect(err => {
-//     const reviewsCollection = client.db("refreshdb").collection("reviews");
-
-//     router.get("/", (req, res) => {
-//         reviewsCollection.find({})
-//             .toArray((err, documents) => {
-//                 res.send(documents)
-//             })
-//     })
-// })
-
+router.get("/", (req, res) => {
+    review
+        .find()
+        .then(reviews => res.json(reviews))
+})
 
 
 module.exports = router;
