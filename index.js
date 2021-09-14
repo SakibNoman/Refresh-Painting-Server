@@ -5,7 +5,6 @@ require('dotenv').config()
 
 
 //internal imports
-const client = require('./Connection/DBConnection');
 const servicesRouter = require('./routers/servicesRouter')
 const reviewsRouter = require('./routers/reviewsRouter')
 const ordersRouter = require('./routers/ordersRouter')
@@ -16,6 +15,10 @@ const deleteServiceRouter = require('./routers/deleteServiceRouter')
 const addReviewRouter = require('./routers/addReviewRouter')
 const userOrderRouter = require('./routers/userOrderRouter')
 const updateStatusRouter = require('./routers/updateStatusRouter')
+const adminCheckRouter = require('./routers/adminCheckRouter')
+const addAdminRouter = require('./routers/addAdminRouter')
+const rootRouter = require('./routers/rootRouter');
+const dbConnection = require('./Connection/DBConnection');
 
 
 const app = express()
@@ -24,11 +27,11 @@ const app = express()
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send("hello from db it's working working")
-})
+//dbConnection
+dbConnection();
 
 //routes
+app.use('/', rootRouter)
 app.use('/services', servicesRouter)
 app.use('/reviews', reviewsRouter)
 app.use('/orders', ordersRouter)
@@ -39,31 +42,9 @@ app.use('/deleteService/:id', deleteServiceRouter)  //api for deleting service b
 app.use('/addReview', addReviewRouter) //api to post review by user
 app.use('/userOrder/:email', userOrderRouter) //api to find order for specific user
 app.use('/updateStatus/:id', updateStatusRouter) //api to update order status
+app.use('/isAdmin', adminCheckRouter)//api to check if logged user is an admin
+app.use('/addAdmin', addAdminRouter)//api to add new admin
 
-
-client.connect(err => {
-    const orderCollection = client.db("refreshdb").collection("orders");
-    const adminCollection = client.db("refreshdb").collection("admins");
-
-    //api to add new admin
-    app.post('/addAdmin', (req, res) => {
-        const email = req.body;
-        adminCollection.insertOne(email)
-            .then(result => {
-                res.send(result.insertedCount > 0)
-            })
-    })
-
-    //api to check if logged user is an admin
-    app.post('/isAdmin', (req, res) => {
-        const email = req.body.email
-        adminCollection.find({ email: email })
-            .toArray((err, admin) => {
-                res.send(admin.length > 0)
-            })
-    })
-
-});
 
 app.listen(process.env.PORT, () => {
     console.log(process.env.PORT);
