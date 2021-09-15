@@ -4,7 +4,7 @@ const order = require('../models/order');
 const router = express.Router();
 
 
-router.patch("/", (req, res) => {
+router.patch("/:id", (req, res) => {
     const id = ObjectID(req.params.id)
     order
         .findOneAndUpdate({ _id: id }, {

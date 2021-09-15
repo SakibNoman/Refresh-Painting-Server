@@ -36,10 +36,10 @@ app.use('/orders', ordersRouter)
 app.use('/addOrder', addOrderRouter)
 app.use('/addService', addServiceRouter) //api for add new services by admin
 app.use('/singleService', servicesRouter) //api for single service when clicked on service card
-app.use('/deleteService/:id', deleteServiceRouter)  //api for deleting service by admin
+app.use('/deleteService', deleteServiceRouter)  //api for deleting service by admin
 app.use('/addReview', addReviewRouter) //api to post review by user
 app.use('/userOrder', ordersRouter) //api to find order for specific user
-app.use('/updateStatus/:id', updateStatusRouter) //api to update order status
+app.use('/updateStatus', updateStatusRouter) //api to update order status
 app.use('/isAdmin', adminCheckRouter)//api to check if logged user is an admin
 app.use('/addAdmin', addAdminRouter)//api to add new admin
 

@@ -5,7 +5,7 @@ const service = require('../models/service');
 const router = express.Router();
 
 
-router.delete("/", (req, res) => {
+router.delete("/:id", (req, res) => {
     const id = ObjectID(req.params.id)
     service
         .deleteOne({ _id: id })
