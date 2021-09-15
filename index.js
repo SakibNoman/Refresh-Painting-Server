@@ -44,7 +44,7 @@ app.use('/isAdmin', adminCheckRouter)//api to check if logged user is an admin
 app.use('/addAdmin', addAdminRouter)//api to add new admin
 
 
-app.listen(5050 || process.env.PORT, () => {
+app.listen(process.env.PORT || 5000, () => {
     console.log(process.env.PORT);
 })
 
