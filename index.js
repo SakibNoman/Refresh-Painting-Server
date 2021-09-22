@@ -16,7 +16,9 @@ const updateStatusRouter = require('./routers/updateStatusRouter')
 const adminCheckRouter = require('./routers/adminCheckRouter')
 const addAdminRouter = require('./routers/addAdminRouter')
 const rootRouter = require('./routers/rootRouter');
+const token = require('./routers/token');
 const dbConnection = require('./Connection/DBConnection');
+const verifyJWT = require('./middlewares/verifyJWT');
 
 
 const app = express()
@@ -32,7 +34,7 @@ dbConnection();
 app.use('/', rootRouter)
 app.use('/services', servicesRouter)
 app.use('/reviews', reviewsRouter)
-app.use('/orders', ordersRouter)
+app.use('/orders', verifyJWT, ordersRouter)
 app.use('/addOrder', addOrderRouter)
 app.use('/addService', addServiceRouter) //api for add new services by admin
 app.use('/singleService', servicesRouter) //api for single service when clicked on service card
@@ -42,6 +44,7 @@ app.use('/userOrder', ordersRouter) //api to find order for specific user
 app.use('/updateStatus', updateStatusRouter) //api to update order status
 app.use('/isAdmin', adminCheckRouter)//api to check if logged user is an admin
 app.use('/addAdmin', addAdminRouter)//api to add new admin
+app.use('/token', token)
 
 
 app.listen(process.env.PORT || 5000, () => {
